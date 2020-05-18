@@ -28,6 +28,7 @@ ifeq ($(UNAME), s390x)
 else
 	RACE=-race
 endif
+GOARCH=$(GOARCH:-arm64)
 GOBUILD=CGO_ENABLED=0 installsuffix=cgo go build -trimpath
 GOTEST=go test -v $(RACE)
 GOLINT=golint
@@ -316,7 +317,7 @@ docker-push:
 	# for component in agent cassandra-schema es-index-cleaner es-rollover collector query ingester example-hotrod tracegen; do \
 	# 	docker push $(DOCKER_NAMESPACE)/jaeger-$$component ; \
 	# done
-	for component in agent collector query ; do \
+	for component in agent collector query; do \
 		docker push $(DOCKER_NAMESPACE)/$(GOARCH)/jaeger-$$component ; \
 	done
 
