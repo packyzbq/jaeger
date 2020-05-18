@@ -1,4 +1,4 @@
-JAEGER_IMPORT_PATH=github.com/jaegertracing/jaeger
+JAEGER_IMPORT_PATH=github.com/packyzbq/jaeger
 STORAGE_PKGS = ./plugin/storage/integration/...
 
 # all .go files that are not auto-generated and should be auto-formatted and linted.
