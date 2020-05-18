@@ -61,7 +61,7 @@ JAEGER_DOCKER_PROTOBUF=jaegertracing/protobuf:0.1.0
 COLOR_PASS=$(shell printf "\033[32mPASS\033[0m")
 COLOR_FAIL=$(shell printf "\033[31mFAIL\033[0m")
 COLORIZE=$(SED) ''/PASS/s//$(COLOR_PASS)/'' | $(SED) ''/FAIL/s//$(COLOR_FAIL)/''
-DOCKER_NAMESPACE?=jaegertracing
+DOCKER_NAMESPACE?=packyzbq/jaeger
 DOCKER_TAG?=latest
 
 MOCKERY=mockery
@@ -274,7 +274,7 @@ build-binaries-s390x:
 	GOOS=linux GOARCH=s390x $(MAKE) build-platform-binaries
 
 .PHONY: build-platform-binaries
-build-platform-binaries: build-agent build-collector build-query build-ingester build-all-in-one build-examples build-tracegen
+build-platform-binaries: build-agent build-collector build-query #build-ingester build-all-in-one build-examples build-tracegen
 
 .PHONY: build-all-platforms
 build-all-platforms: build-binaries-linux build-binaries-windows build-binaries-darwin build-binaries-s390x
@@ -292,8 +292,8 @@ docker-images-elastic:
 
 .PHONY: docker-images-jaeger-backend
 docker-images-jaeger-backend:
-	for component in agent collector query ingester ; do \
-		docker build -t $(DOCKER_NAMESPACE)/jaeger-$$component:${DOCKER_TAG} cmd/$$component ; \
+	for component in collector query ; do \
+		docker build -t $(DOCKER_NAMESPACE)/$(GOARCH)/jaeger-$$component:${DOCKER_TAG} cmd/$$component ; \
 		echo "Finished building $$component ==============" ; \
 	done
 
@@ -303,18 +303,21 @@ docker-images-tracegen:
 	@echo "Finished building jaeger-tracegen =============="
 
 .PHONY: docker-images-only
-docker-images-only: docker-images-cassandra docker-images-elastic docker-images-jaeger-backend docker-images-tracegen
+docker-images-only: docker-images-jaeger-backend #docker-images-cassandra docker-images-elastic docker-images-jaeger-backend docker-images-tracegen
 
 .PHONY: docker-push
 docker-push:
-	@while [ -z "$$CONFIRM" ]; do \
-		read -r -p "Do you really want to push images to repository \"${DOCKER_NAMESPACE}\"? [y/N] " CONFIRM; \
-	done ; \
-	if [ $$CONFIRM != "y" ] && [ $$CONFIRM != "Y" ]; then \
-		echo "Exiting." ; exit 1 ; \
-	fi
-	for component in agent cassandra-schema es-index-cleaner es-rollover collector query ingester example-hotrod tracegen; do \
-		docker push $(DOCKER_NAMESPACE)/jaeger-$$component ; \
+	# @while [ -z "$$CONFIRM" ]; do \
+	# 	read -r -p "Do you really want to push images to repository \"${DOCKER_NAMESPACE}\"? [y/N] " CONFIRM; \
+	# done ; \
+	# if [ $$CONFIRM != "y" ] && [ $$CONFIRM != "Y" ]; then \
+	# 	echo "Exiting." ; exit 1 ; \
+	# fi
+	# for component in agent cassandra-schema es-index-cleaner es-rollover collector query ingester example-hotrod tracegen; do \
+	# 	docker push $(DOCKER_NAMESPACE)/jaeger-$$component ; \
+	# done
+	for component in agent collector query ; do \
+		docker push $(DOCKER_NAMESPACE)/$(GOARCH)/jaeger-$$component ; \
 	done
 
 .PHONY: build-crossdock-linux
