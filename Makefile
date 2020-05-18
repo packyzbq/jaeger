@@ -63,7 +63,7 @@ COLOR_PASS=$(shell printf "\033[32mPASS\033[0m")
 COLOR_FAIL=$(shell printf "\033[31mFAIL\033[0m")
 COLORIZE=$(SED) ''/PASS/s//$(COLOR_PASS)/'' | $(SED) ''/FAIL/s//$(COLOR_FAIL)/''
 DOCKER_NAMESPACE?=packyzbq/jaeger
-DOCKER_TAG?=latest
+DOCKER_TAG?=1.17.0
 
 MOCKERY=mockery
 
@@ -225,11 +225,10 @@ endif
 
 .PHONY: build-agent
 build-agent:
-echo "======"$(GOARCH)
 ifeq ($(GOARCH), s390x)
 	$(GOBUILD) -o ./cmd/agent/agent-$(GOOS)-$(GOARCH) $(BUILD_INFO) ./cmd/agent/main.go
 else
-	GOARCH=$(GOARCH:-arm64) $(GOBUILD) -o ./cmd/agent/agent-$(GOOS) $(BUILD_INFO) ./cmd/agent/main.go
+	GOARCH=arm64 $(GOBUILD) -o ./cmd/agent/agent-$(GOOS) $(BUILD_INFO) ./cmd/agent/main.go
 endif
 
 .PHONY: build-query
@@ -237,7 +236,7 @@ build-query:
 ifeq ($(GOARCH), s390x)
 	$(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS)-$(GOARCH) $(BUILD_INFO) ./cmd/query/main.go
 else
-	GOARCH=$(GOARCH:-arm64) $(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS) $(BUILD_INFO) ./cmd/query/main.go
+	GOARCH=arm64 $(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS) $(BUILD_INFO) ./cmd/query/main.go
 endif
 
 .PHONY: build-collector
@@ -245,7 +244,7 @@ build-collector: elasticsearch-mappings
 ifeq ($(GOARCH), s390x)
 	$(GOBUILD) -o ./cmd/collector/collector-$(GOOS)-$(GOARCH) $(BUILD_INFO) ./cmd/collector/main.go
 else
-	GOARCH=$(GOARCH:-arm64) $(GOBUILD) -o ./cmd/collector/collector-$(GOOS) $(BUILD_INFO) ./cmd/collector/main.go
+	GOARCH=arm64 $(GOBUILD) -o ./cmd/collector/collector-$(GOOS) $(BUILD_INFO) ./cmd/collector/main.go
 endif
 
 .PHONY: build-ingester
@@ -295,7 +294,7 @@ docker-images-elastic:
 .PHONY: docker-images-jaeger-backend
 docker-images-jaeger-backend:
 	for component in collector query; do \
-		docker build -t $(DOCKER_NAMESPACE)/$(GOARCH:-arm64)/jaeger-$$component:${DOCKER_TAG} cmd/$$component ; \
+		docker build -t $(DOCKER_NAMESPACE)/arm64/jaeger-$$component:${DOCKER_TAG} cmd/$$component ; \
 		echo "Finished building $$component ==============" ; \
 	done
 
@@ -319,7 +318,7 @@ docker-push:
 	# 	docker push $(DOCKER_NAMESPACE)/jaeger-$$component ; \
 	# done
 	for component in agent collector query; do \
-		docker push $(DOCKER_NAMESPACE)/$(GOARCH:-arm64)/jaeger-$$component ; \
+		docker push $(DOCKER_NAMESPACE)/arm64/jaeger-$$component ; \
 	done
 
 .PHONY: build-crossdock-linux
