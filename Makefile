@@ -318,7 +318,7 @@ docker-push:
 	# 	docker push $(DOCKER_NAMESPACE)/jaeger-$$component ; \
 	# done
 	for component in agent collector query; do \
-		docker push $(DOCKER_NAMESPACE)/arm64/jaeger-$$component ; \
+		docker push $(DOCKER_NAMESPACE)/arm64/jaeger-$$component:${DOCKER_TAG} ; \
 	done
 
 .PHONY: build-crossdock-linux
