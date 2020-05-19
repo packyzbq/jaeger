@@ -63,7 +63,7 @@ COLOR_PASS=$(shell printf "\033[32mPASS\033[0m")
 COLOR_FAIL=$(shell printf "\033[31mFAIL\033[0m")
 COLORIZE=$(SED) ''/PASS/s//$(COLOR_PASS)/'' | $(SED) ''/FAIL/s//$(COLOR_FAIL)/''
 DOCKER_NAMESPACE?=packyzbq/jaeger
-DOCKER_TAG?=1.17.0
+DOCKER_TAG?=1.17.0-${GOARCH}
 DOCKER_USER?=packyzbq
 DOCKER_PASSWD?=abc
 
@@ -296,7 +296,7 @@ docker-images-elastic:
 .PHONY: docker-images-jaeger-backend
 docker-images-jaeger-backend:
 	for component in collector query; do \
-		docker build -t ${DOCKER_NAMESPACE}/arm64/jaeger-$$component:${DOCKER_TAG} cmd/$$component ; \
+		docker build -t ${DOCKER_NAMESPACE}/jaeger-$$component:${DOCKER_TAG} cmd/$$component ; \
 		echo "Finished building $$component ==============" ; \
 	done
 
@@ -321,7 +321,7 @@ docker-push:
 	# done
 	docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWD}
 	for component in collector query; do \
-		docker push ${DOCKER_NAMESPACE}/arm64/jaeger-$$component:${DOCKER_TAG} ; \
+		docker push ${DOCKER_NAMESPACE}/jaeger-$$component:${DOCKER_TAG} ; \
 	done
 
 .PHONY: build-crossdock-linux
