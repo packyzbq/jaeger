@@ -64,6 +64,8 @@ COLOR_FAIL=$(shell printf "\033[31mFAIL\033[0m")
 COLORIZE=$(SED) ''/PASS/s//$(COLOR_PASS)/'' | $(SED) ''/FAIL/s//$(COLOR_FAIL)/''
 DOCKER_NAMESPACE?=packyzbq/jaeger
 DOCKER_TAG?=1.17.0
+DOCKER_USER?=packyzbq
+DOCKER_PASSWD?=abc
 
 MOCKERY=mockery
 
@@ -317,7 +319,8 @@ docker-push:
 	# for component in agent cassandra-schema es-index-cleaner es-rollover collector query ingester example-hotrod tracegen; do \
 	# 	docker push ${DOCKER_NAMESPACE}/jaeger-$$component ; \
 	# done
-	for component in agent collector query; do \
+	docker login -u ${DOCKER_USER} -p ${DOCKER_PASSWD}
+	for component in collector query; do \
 		docker push ${DOCKER_NAMESPACE}/arm64/jaeger-$$component:${DOCKER_TAG} ; \
 	done
 
