@@ -199,7 +199,7 @@ build-tracegen:
 .PHONE: docker-hotrod
 docker-hotrod:
 	GOOS=linux $(MAKE) build-examples
-	docker build -t $(DOCKER_NAMESPACE)/example-hotrod:${DOCKER_TAG} ./examples/hotrod
+	docker build -t ${DOCKER_NAMESPACE}/example-hotrod:${DOCKER_TAG} ./examples/hotrod
 
 .PHONY: run-all-in-one
 run-all-in-one:
@@ -282,25 +282,25 @@ build-all-platforms: build-binaries-linux build-binaries-windows build-binaries-
 
 .PHONY: docker-images-cassandra
 docker-images-cassandra:
-	docker build -t $(DOCKER_NAMESPACE)/jaeger-cassandra-schema:${DOCKER_TAG} plugin/storage/cassandra/
+	docker build -t ${DOCKER_NAMESPACE}/jaeger-cassandra-schema:${DOCKER_TAG} plugin/storage/cassandra/
 	@echo "Finished building jaeger-cassandra-schema =============="
 
 .PHONY: docker-images-elastic
 docker-images-elastic:
-	docker build -t $(DOCKER_NAMESPACE)/jaeger-es-index-cleaner:${DOCKER_TAG} plugin/storage/es
-	docker build -t $(DOCKER_NAMESPACE)/jaeger-es-rollover:${DOCKER_TAG} plugin/storage/es -f plugin/storage/es/Dockerfile.rollover
+	docker build -t ${DOCKER_NAMESPACE}/jaeger-es-index-cleaner:${DOCKER_TAG} plugin/storage/es
+	docker build -t ${DOCKER_NAMESPACE}/jaeger-es-rollover:${DOCKER_TAG} plugin/storage/es -f plugin/storage/es/Dockerfile.rollover
 	@echo "Finished building jaeger-es-indices-clean =============="
 
 .PHONY: docker-images-jaeger-backend
 docker-images-jaeger-backend:
 	for component in collector query; do \
-		docker build -t $(DOCKER_NAMESPACE)/arm64/jaeger-$$component:${DOCKER_TAG} cmd/$$component ; \
+		docker build -t ${DOCKER_NAMESPACE}/arm64/jaeger-$$component:${DOCKER_TAG} cmd/$$component ; \
 		echo "Finished building $$component ==============" ; \
 	done
 
 .PHONY: docker-images-tracegen
 docker-images-tracegen:
-	docker build -t $(DOCKER_NAMESPACE)/jaeger-tracegen:${DOCKER_TAG} cmd/tracegen/
+	docker build -t ${DOCKER_NAMESPACE}/jaeger-tracegen:${DOCKER_TAG} cmd/tracegen/
 	@echo "Finished building jaeger-tracegen =============="
 
 .PHONY: docker-images-only
@@ -315,10 +315,10 @@ docker-push:
 	# 	echo "Exiting." ; exit 1 ; \
 	# fi
 	# for component in agent cassandra-schema es-index-cleaner es-rollover collector query ingester example-hotrod tracegen; do \
-	# 	docker push $(DOCKER_NAMESPACE)/jaeger-$$component ; \
+	# 	docker push ${DOCKER_NAMESPACE}/jaeger-$$component ; \
 	# done
 	for component in agent collector query; do \
-		docker push $(DOCKER_NAMESPACE)/arm64/jaeger-$$component:${DOCKER_TAG} ; \
+		docker push ${DOCKER_NAMESPACE}/arm64/jaeger-$$component:${DOCKER_TAG} ; \
 	done
 
 .PHONY: build-crossdock-linux
@@ -335,7 +335,7 @@ build-crossdock-ui-placeholder:
 
 .PHONY: build-crossdock
 build-crossdock: build-crossdock-ui-placeholder build-binaries-linux build-crossdock-linux docker-images-cassandra docker-images-jaeger-backend
-	docker build -t $(DOCKER_NAMESPACE)/test-driver:${DOCKER_TAG} crossdock/
+	docker build -t ${DOCKER_NAMESPACE}/test-driver:${DOCKER_TAG} crossdock/
 	@echo "Finished building test-driver ==============" ; \
 
 .PHONY: build-and-run-crossdock
