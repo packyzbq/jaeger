@@ -63,7 +63,7 @@ COLOR_PASS=$(shell printf "\033[32mPASS\033[0m")
 COLOR_FAIL=$(shell printf "\033[31mFAIL\033[0m")
 COLORIZE=$(SED) ''/PASS/s//$(COLOR_PASS)/'' | $(SED) ''/FAIL/s//$(COLOR_FAIL)/''
 DOCKER_NAMESPACE?=packyzbq
-DOCKER_TAG?=1.17.0-${GOARCH:-arm64}
+DOCKER_TAG?=1.17.0-arm64
 DOCKER_USER?=packyzbq
 DOCKER_PASSWD?=abc
 
