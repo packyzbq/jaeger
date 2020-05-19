@@ -8,5 +8,5 @@ set -e
 source ~/.nvm/nvm.sh
 nvm use 10
 
-export DOCKER_NAMESPACE=jaegertracing
+export DOCKER_NAMESPACE=packyzbq/jaeger
 make docker
