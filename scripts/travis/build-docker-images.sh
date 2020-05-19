@@ -9,4 +9,5 @@ source ~/.nvm/nvm.sh
 nvm use 10
 
 export DOCKER_NAMESPACE=packyzbq/jaeger
+export GOARCH=${GOARCH:-arm64}
 make docker

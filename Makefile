@@ -28,7 +28,7 @@ ifeq ($(UNAME), s390x)
 else
 	RACE=-race
 endif
-GOARCH=$(GOARCH:-arm64)
+GOARCH=${GOARCH:-arm64}
 GOBUILD=CGO_ENABLED=0 installsuffix=cgo go build -trimpath
 GOTEST=go test -v $(RACE)
 GOLINT=golint
@@ -62,7 +62,7 @@ JAEGER_DOCKER_PROTOBUF=jaegertracing/protobuf:0.1.0
 COLOR_PASS=$(shell printf "\033[32mPASS\033[0m")
 COLOR_FAIL=$(shell printf "\033[31mFAIL\033[0m")
 COLORIZE=$(SED) ''/PASS/s//$(COLOR_PASS)/'' | $(SED) ''/FAIL/s//$(COLOR_FAIL)/''
-DOCKER_NAMESPACE?=packyzbq/jaeger
+DOCKER_NAMESPACE?=packyzbq
 DOCKER_TAG?=1.17.0-${GOARCH}
 DOCKER_USER?=packyzbq
 DOCKER_PASSWD?=abc
