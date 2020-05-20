@@ -238,7 +238,7 @@ build-query:
 ifeq ($(GOARCH), s390x)
 	$(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS)-$(GOARCH) $(BUILD_INFO) ./cmd/query/main.go
 else
-	GOARCH=${GOARCH:-arm64} $(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS) $(BUILD_INFO) ./cmd/query/main.go
+	GOARCH=arm64 $(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS) $(BUILD_INFO) ./cmd/query/main.go
 endif
 
 .PHONY: build-collector
@@ -246,7 +246,7 @@ build-collector: elasticsearch-mappings
 ifeq ($(GOARCH), s390x)
 	$(GOBUILD) -o ./cmd/collector/collector-$(GOOS)-$(GOARCH) $(BUILD_INFO) ./cmd/collector/main.go
 else
-	GOARCH=${GOARCH:-arm64} $(GOBUILD) -o ./cmd/collector/collector-$(GOOS) $(BUILD_INFO) ./cmd/collector/main.go
+	GOARCH=arm64 $(GOBUILD) -o ./cmd/collector/collector-$(GOOS) $(BUILD_INFO) ./cmd/collector/main.go
 endif
 
 .PHONY: build-ingester
