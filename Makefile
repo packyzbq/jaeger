@@ -28,7 +28,7 @@ ifeq ($(UNAME), s390x)
 else
 	RACE=-race
 endif
-GOARCH=${GOARCH:-mips64le}
+GOARCH=${GOARCH:-amd64}
 GOBUILD=CGO_ENABLED=0 installsuffix=cgo go build -trimpath
 GOTEST=go test -v $(RACE)
 GOLINT=golint
@@ -63,7 +63,7 @@ COLOR_PASS=$(shell printf "\033[32mPASS\033[0m")
 COLOR_FAIL=$(shell printf "\033[31mFAIL\033[0m")
 COLORIZE=$(SED) ''/PASS/s//$(COLOR_PASS)/'' | $(SED) ''/FAIL/s//$(COLOR_FAIL)/''
 DOCKER_NAMESPACE?=packyzbq
-DOCKER_TAG?=1.17.0-mips64le
+DOCKER_TAG?=1.17.0-amd64
 DOCKER_USER?=packyzbq
 DOCKER_PASSWD?=abc
 
@@ -238,7 +238,7 @@ build-query:
 ifeq ($(GOARCH), s390x)
 	$(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS)-$(GOARCH) $(BUILD_INFO) ./cmd/query/main.go
 else
-	GOARCH=mips64le $(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS) $(BUILD_INFO) ./cmd/query/main.go
+	GOARCH=amd64 $(GOBUILD) -tags ui -o ./cmd/query/query-$(GOOS) $(BUILD_INFO) ./cmd/query/main.go
 endif
 
 .PHONY: build-collector
@@ -246,7 +246,7 @@ build-collector: elasticsearch-mappings
 ifeq ($(GOARCH), s390x)
 	$(GOBUILD) -o ./cmd/collector/collector-$(GOOS)-$(GOARCH) $(BUILD_INFO) ./cmd/collector/main.go
 else
-	GOARCH=mips64le $(GOBUILD) -o ./cmd/collector/collector-$(GOOS) $(BUILD_INFO) ./cmd/collector/main.go
+	GOARCH=amd64 $(GOBUILD) -o ./cmd/collector/collector-$(GOOS) $(BUILD_INFO) ./cmd/collector/main.go
 endif
 
 .PHONY: build-ingester
@@ -277,7 +277,7 @@ build-binaries-s390x:
 	GOOS=linux GOARCH=s390x $(MAKE) build-platform-binaries
 
 .PHONY: build-platform-binaries
-build-platform-binaries: build-agent build-collector build-query #build-ingester build-all-in-one build-examples build-tracegen
+build-platform-binaries: build-collector build-query #build-ingester build-all-in-one build-examples build-tracegen
 
 .PHONY: build-all-platforms
 build-all-platforms: build-binaries-linux build-binaries-windows build-binaries-darwin build-binaries-s390x
