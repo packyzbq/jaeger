@@ -1,7 +1,7 @@
 FROM alpine:latest as certs
 RUN apk add --update --no-cache ca-certificates
 
-FROM arm64v8/busybox
+FROM mips64le/busybox
 
 COPY --from=certs /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
